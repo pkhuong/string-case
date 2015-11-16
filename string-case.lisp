@@ -1,5 +1,9 @@
 ;;; Implementing an efficient string= case in Common Lisp
 ;;;
+;;; 2015-11-15: Defknown don't have explicit-check in SBCL 1.3.0
+;;;  Remove the declaration.  It's never useful the way we use
+;;;  numeric-char=.
+;;;
 ;;; 2015-11-15: Make this a real ASDF system for Xach
 ;;;  I copied the system definition from Quicklisp and mangled as
 ;;;  necessary.
@@ -238,11 +242,12 @@
   (declare (type character x y))
   (logxor (char-code x)
           (char-code y)))
+
 #+ (and sbcl (or x86 x86-64))
 (progn
   (defknown numeric-char= (character character)
       (unsigned-byte #. (1- sb-vm:n-machine-word-bits))
-      (movable foldable flushable sb-c::explicit-check))
+      (movable foldable flushable))
 
   (define-vop (numeric-char=)
     (:args (x :scs (sb-vm::character-reg sb-vm::character-stack)
