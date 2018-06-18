@@ -263,7 +263,7 @@
     (:note "inline constant numeric-char=")
     (:generator 1
        (move r x)
-       (sb-vm::inst sb-vm::xor r (char-code y)))))
+       (sb-vm::inst #:xor r (char-code y)))))
 
 ;;; At each step, we may be able to find positions for which
 ;;; there can only be one character. If we emit the check for
